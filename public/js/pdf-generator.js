@@ -476,14 +476,15 @@
         document.body.appendChild(container);
       }
 
-      container.innerHTML = html;
-      container.classList.add('pdf-rendering');
+      // -- 5b. Wrap HTML in a self-contained div with explicit styles --
+      var wrappedHtml =
+        '<div style="width:7in;margin:0;padding:0;background:#fff;color:#222;font-family:Arial,sans-serif;">' +
+        html +
+        '</div>';
 
-      // Force layout reflow and wait for rendering
-      void container.offsetHeight;
-      await new Promise(function (r) { setTimeout(r, 500); });
+      console.log('[PDFGenerator] HTML length:', wrappedHtml.length);
 
-      // -- 6. Generate and save the PDF --
+      // -- 6. Generate and save the PDF using HTML string directly --
       var filename = 'AMS-ROI-Report-' + new Date().toISOString().split('T')[0] + '.pdf';
 
       await html2pdf()
@@ -494,16 +495,12 @@
           html2canvas: {
             scale: 2,
             useCORS: true,
-            scrollX: 0,
-            scrollY: 0,
-            windowWidth: 816,
-            windowHeight: 1056,
-            logging: false
+            logging: true
           },
           jsPDF:     { unit: 'in', format: 'letter', orientation: 'portrait' },
           pagebreak: { mode: ['css', 'legacy'], before: '.pdf-page-break' }
         })
-        .from(container)
+        .from(wrappedHtml, 'string')
         .save();
 
     } catch (err) {
@@ -513,10 +510,7 @@
       }
     } finally {
       // -- 7. Clean up --
-      if (container) {
-        container.classList.remove('pdf-rendering');
-        container.innerHTML = '';
-      }
+      // Nothing to clean up - we used string mode
       if (btn) {
         btn.disabled = false;
         btn.innerHTML = originalBtnHTML;
