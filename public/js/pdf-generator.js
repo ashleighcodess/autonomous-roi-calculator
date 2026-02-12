@@ -469,52 +469,60 @@
         pageBreak() +
         buildMethodology(inputs);
 
-      // -- 5. Render in an iframe to isolate from page CSS --
-      var iframe = document.createElement('iframe');
-      iframe.style.cssText = 'position:fixed;left:0;top:0;width:816px;height:1056px;opacity:0;z-index:-1;border:none;';
-      document.body.appendChild(iframe);
+      // -- 5. Render in a visible DOM element --
+      //    Save scroll, scroll to top, render, restore scroll.
+      var savedScrollX = window.scrollX;
+      var savedScrollY = window.scrollY;
+      window.scrollTo(0, 0);
 
-      var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-      iframeDoc.open();
-      iframeDoc.write(
-        '<!DOCTYPE html><html><head><style>' +
-        'body{margin:0;padding:0;background:#fff;font-family:Arial,sans-serif;color:#222;width:7.5in;}' +
-        'table{border-collapse:collapse;}' +
-        '.pdf-page-break{page-break-before:always;}' +
-        '</style></head><body>' + html + '</body></html>'
-      );
-      iframeDoc.close();
+      var renderDiv = document.createElement('div');
+      renderDiv.style.cssText =
+        'position:absolute;top:0;left:0;width:7.5in;' +
+        'background:#fff;z-index:99999;padding:0;margin:0;';
+      renderDiv.innerHTML = html;
+      document.body.appendChild(renderDiv);
 
-      // Wait for iframe content to render
-      await new Promise(function (r) { setTimeout(r, 1000); });
+      // Wait for browser to paint
+      await new Promise(function (r) {
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            setTimeout(r, 500);
+          });
+        });
+      });
 
-      var iframeBody = iframeDoc.body;
-      console.log('[PDFGenerator] iframe body dimensions:', iframeBody.scrollWidth, 'x', iframeBody.scrollHeight);
+      console.log('[PDFGenerator] renderDiv size:', renderDiv.offsetWidth, 'x', renderDiv.offsetHeight);
 
-      // -- 6. Generate and save the PDF from the iframe body --
+      // -- 6. Generate and save the PDF --
       var filename = 'AMS-ROI-Report-' + new Date().toISOString().split('T')[0] + '.pdf';
 
-      await html2pdf()
-        .set({
-          margin:    [0.5, 0.75, 0.75, 0.75],
-          filename:  filename,
-          image:     { type: 'jpeg', quality: 0.95 },
-          html2canvas: {
-            scale: 2,
-            useCORS: true,
-            scrollX: 0,
-            scrollY: 0,
-            windowWidth: 816,
-            logging: true
-          },
-          jsPDF:     { unit: 'in', format: 'letter', orientation: 'portrait' },
-          pagebreak: { mode: ['css', 'legacy'], before: '.pdf-page-break' }
-        })
-        .from(iframeBody)
-        .save();
-
-      // Remove iframe
-      document.body.removeChild(iframe);
+      try {
+        await html2pdf()
+          .set({
+            margin:    [0.5, 0.75, 0.75, 0.75],
+            filename:  filename,
+            image:     { type: 'jpeg', quality: 0.95 },
+            html2canvas: {
+              scale: 2,
+              useCORS: true,
+              scrollX: 0,
+              scrollY: 0,
+              x: 0,
+              y: 0,
+              width: renderDiv.offsetWidth,
+              height: renderDiv.offsetHeight,
+              windowWidth: renderDiv.offsetWidth,
+              logging: true
+            },
+            jsPDF:     { unit: 'in', format: 'letter', orientation: 'portrait' },
+            pagebreak: { mode: ['css', 'legacy'], before: '.pdf-page-break' }
+          })
+          .from(renderDiv)
+          .save();
+      } finally {
+        document.body.removeChild(renderDiv);
+        window.scrollTo(savedScrollX, savedScrollY);
+      }
 
     } catch (err) {
       console.error('[PDFGenerator] Error generating PDF:', err);
@@ -523,8 +531,8 @@
       }
     } finally {
       // -- 7. Clean up --
-      // Clean up iframe if still present (e.g. on error)
-      var leftover = document.querySelector('iframe[style*="z-index:-1"]');
+      // Clean up render div if still present (e.g. on error)
+      var leftover = document.getElementById('pdf-render-temp');
       if (leftover) document.body.removeChild(leftover);
       if (btn) {
         btn.disabled = false;
