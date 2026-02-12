@@ -155,13 +155,17 @@
   }
 
   /* App Header */
-  .header-subtitle {
-    font-size: 0.7rem;
+  .logo-mark {
+    height: 44px;
   }
 
-  .site-header .logo,
-  .app-header .logo {
-    max-height: 90px;
+  .brand-name {
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+  }
+
+  .header-subtitle {
+    font-size: 0.65rem;
   }
 
   /* Environmental Grid */
@@ -323,13 +327,17 @@
     gap: var(--space-3);
   }
 
-  .site-header .logo,
-  .app-header .logo {
-    max-height: 72px;
+  .logo-mark {
+    height: 36px;
+  }
+
+  .brand-name {
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
   }
 
   .header-subtitle {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
   }
 }
 

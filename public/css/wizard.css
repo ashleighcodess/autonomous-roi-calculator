@@ -75,7 +75,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-1);
+  gap: var(--space-2);
   max-width: var(--max-width);
   margin: 0 auto;
 }
@@ -85,17 +85,31 @@
   align-items: center;
 }
 
-.site-header .logo,
-.app-header .logo {
-  max-height: 120px;
+.logo-mark {
+  height: 52px;
   width: auto;
 }
 
-.header-subtitle {
-  color: var(--color-gray-500);
-  font-size: 0.8rem;
+.header-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.brand-name {
+  font-size: 1.1rem;
   font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-900);
   letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.header-subtitle {
+  color: var(--color-gray-400);
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 2px;
   text-transform: uppercase;
 }
 
