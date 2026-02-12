@@ -2,9 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>ROI Calculator | Autonomous Mowing Solutions</title>
   <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="images/favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
@@ -24,13 +28,15 @@
 </head>
 <body>
 
+  <div class="app-shell">
+
   <!-- ===== HEADER ===== -->
   <header class="site-header">
     <div class="header-inner">
       <a href="/" class="logo-link" aria-label="Autonomous Mowing Solutions home">
-        <img src="images/logo.svg" alt="Autonomous Mowing Solutions" class="logo" width="180" height="48">
+        <img src="images/logo.png" alt="Autonomous Mowing Solutions" class="logo">
       </a>
-      <h1 class="header-title">ROI Calculator</h1>
+      <span class="header-subtitle">ROI Calculator</span>
     </div>
   </header>
 
@@ -78,12 +84,34 @@
         <!-- Property Type -->
         <div class="form-group">
           <label for="property-type" class="form-label">Property Type</label>
-          <select id="property-type" name="propertyType" class="form-select" required aria-required="true">
+          <select id="property-type" name="propertyType" class="form-select" required aria-required="true" hidden>
             <option value="" disabled selected>Select property type...</option>
             <option value="commercial">Commercial Property</option>
             <option value="golf">Golf Course</option>
             <option value="athletic">Athletic Fields</option>
           </select>
+          <div class="custom-select" data-for="property-type">
+            <button type="button" class="custom-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+              <span class="custom-select-value">Select property type...</span>
+              <span class="custom-select-arrow">
+                <svg width="12" height="7" viewBox="0 0 12 7" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </button>
+            <ul class="custom-select-options" role="listbox" tabindex="-1">
+              <li class="custom-select-option" data-value="commercial" role="option">
+                <span class="option-label">Commercial Property</span>
+                <span class="option-desc">Office parks, campuses, HOAs</span>
+              </li>
+              <li class="custom-select-option" data-value="golf" role="option">
+                <span class="option-label">Golf Course</span>
+                <span class="option-desc">Fairways, roughs, practice areas</span>
+              </li>
+              <li class="custom-select-option" data-value="athletic" role="option">
+                <span class="option-label">Athletic Fields</span>
+                <span class="option-desc">Sports complexes, school fields</span>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <!-- Total Mowable Acreage -->
@@ -915,7 +943,7 @@
               </tr>
             </tfoot>
           </table>
-          <div class="chart-container chart-container-donut">
+          <div class="chart-container-donut">
             <canvas id="chart-donut" aria-label="Cost breakdown donut chart" role="img"></canvas>
           </div>
         </div>
@@ -1149,6 +1177,8 @@
     </section>
 
   </main>
+
+  </div><!-- /.app-shell -->
 
   <!-- ===== HIDDEN PDF EXPORT CONTAINER ===== -->
   <div id="pdf-export" hidden aria-hidden="true">

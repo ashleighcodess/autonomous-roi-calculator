@@ -479,11 +479,10 @@
 
       container.innerHTML = html;
       container.removeAttribute('hidden');
-      container.style.display = 'block';
-      container.style.position = 'fixed';
-      container.style.left = '-9999px';
-      container.style.top = '0';
-      container.style.width = '7.5in';   // letter width minus margins
+      container.classList.add('pdf-rendering');
+
+      // Force a layout reflow so html2canvas sees the content
+      void container.offsetHeight;
 
       // -- 6. Generate and save the PDF --
       var filename = 'AMS-ROI-Report-' + new Date().toISOString().split('T')[0] + '.pdf';
@@ -493,7 +492,7 @@
           margin:    [0.5, 0.75, 0.75, 0.75],
           filename:  filename,
           image:     { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true },
+          html2canvas: { scale: 2, useCORS: true, scrollY: 0, windowWidth: 816 },
           jsPDF:     { unit: 'in', format: 'letter', orientation: 'portrait' },
           pagebreak: { mode: ['css', 'legacy'], before: '.pdf-page-break' }
         })
@@ -508,8 +507,8 @@
     } finally {
       // -- 7. Clean up --
       if (container) {
+        container.classList.remove('pdf-rendering');
         container.innerHTML = '';
-        container.style.display = 'none';
         container.setAttribute('hidden', '');
       }
       if (btn) {

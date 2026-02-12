@@ -877,9 +877,89 @@
     initAutomationInfo();
     initAssumptionsToggle();
     initNavigation();
+    initCustomSelects();
 
     // Start on step 1
     goToStep(1);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Custom Branded Select
+  // ---------------------------------------------------------------------------
+  function initCustomSelects() {
+    var selects = document.querySelectorAll('.custom-select');
+    selects.forEach(function (wrapper) {
+      var forId = wrapper.getAttribute('data-for');
+      var nativeSelect = document.getElementById(forId);
+      var trigger = wrapper.querySelector('.custom-select-trigger');
+      var valueSpan = wrapper.querySelector('.custom-select-value');
+      var optionsList = wrapper.querySelector('.custom-select-options');
+      var options = wrapper.querySelectorAll('.custom-select-option');
+
+      // Set initial placeholder state
+      valueSpan.classList.add('placeholder');
+
+      // Toggle open/close
+      trigger.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var isOpen = wrapper.classList.contains('open');
+        closeAllSelects();
+        if (!isOpen) {
+          wrapper.classList.add('open');
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      // Option selection
+      options.forEach(function (opt) {
+        opt.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var value = opt.getAttribute('data-value');
+          var label = opt.querySelector('.option-label').textContent;
+
+          // Update display
+          valueSpan.textContent = label;
+          valueSpan.classList.remove('placeholder');
+
+          // Update selected state
+          options.forEach(function (o) { o.classList.remove('selected'); });
+          opt.classList.add('selected');
+
+          // Sync native select
+          if (nativeSelect) {
+            nativeSelect.value = value;
+            nativeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+
+          // Close
+          wrapper.classList.remove('open');
+          trigger.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      // Keyboard support
+      trigger.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          trigger.click();
+        } else if (e.key === 'Escape') {
+          wrapper.classList.remove('open');
+          trigger.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+
+    // Close on outside click
+    document.addEventListener('click', function () {
+      closeAllSelects();
+    });
+  }
+
+  function closeAllSelects() {
+    document.querySelectorAll('.custom-select.open').forEach(function (s) {
+      s.classList.remove('open');
+      s.querySelector('.custom-select-trigger').setAttribute('aria-expanded', 'false');
+    });
   }
 
   // Boot

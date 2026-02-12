@@ -129,7 +129,7 @@
 .metric-card {
   background-color: var(--color-white);
   border-radius: var(--radius-xl);
-  padding: 28px 24px;
+  padding: 24px 20px;
   text-align: center;
   box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.06),
@@ -137,7 +137,7 @@
   transition:
     transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-  border-top: 4px solid var(--color-orange);
+  border-top: 3px solid var(--color-orange);
   position: relative;
   overflow: hidden;
 }
@@ -241,11 +241,11 @@
 .results-section {
   background-color: var(--color-white);
   border-radius: var(--radius-xl);
-  padding: 36px 40px;
-  margin-bottom: var(--space-8);
+  padding: 32px 36px;
+  margin-bottom: var(--space-6);
   box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.04),
-    0 6px 20px rgba(0, 0, 0, 0.06);
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 4px 16px rgba(0, 0, 0, 0.06);
   max-width: var(--max-width);
   margin-left: auto;
   margin-right: auto;
@@ -897,8 +897,9 @@
 
 .methodology-body code {
   padding: 3px 8px;
-  color: var(--color-orange-light);
-  background-color: var(--color-gray-900);
+  color: var(--color-gray-800);
+  background-color: var(--color-gray-100);
+  border: 1px solid var(--color-gray-200);
   border-radius: var(--radius-sm);
 }
 
@@ -906,18 +907,18 @@
   padding: var(--space-5);
   overflow-x: auto;
   margin: var(--space-4) 0;
-  background-color: var(--color-gray-900);
-  color: #E5E7EB;
+  background-color: var(--color-gray-50);
+  color: var(--color-gray-800);
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-gray-800);
+  border: 1px solid var(--color-gray-200);
   line-height: 1.6;
-  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 .methodology-body pre code {
   padding: 0;
   background: none;
   color: inherit;
+  border: none;
   border-radius: 0;
 }
 
@@ -936,10 +937,11 @@
 .methodology-content code {
   font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
   font-size: 0.84rem;
-  background-color: var(--color-gray-900);
+  background-color: var(--color-gray-100);
+  border: 1px solid var(--color-gray-200);
   border-radius: var(--radius-sm);
   padding: 3px 8px;
-  color: var(--color-orange-light);
+  color: var(--color-gray-800);
 }
 
 .methodology-content p {
@@ -1044,21 +1046,14 @@
 }
 
 .chart-container-donut {
-  max-width: 320px;
+  width: 280px;
+  height: 280px;
   margin: var(--space-4) auto 0;
-  padding: var(--space-6);
+  padding: var(--space-4);
   background-color: var(--color-gray-50);
   border: 1px solid var(--color-gray-100);
   border-radius: var(--radius-lg);
-}
-
-.chart-container-donut {
   position: relative;
-  min-height: 280px;
-}
-
-.chart-container-donut canvas {
-  max-height: none;
 }
 
 @media (max-width: 768px) {
@@ -1485,8 +1480,20 @@
    PDF EXPORT (Hidden container for PDF gen)
    ============================================ */
 
-#pdf-export {
+/* PDF export container - hidden by default, shown by JS during generation */
+#pdf-export[hidden] {
   display: none;
+}
+
+#pdf-export.pdf-rendering {
+  display: block !important;
+  position: absolute !important;
+  left: -9999px !important;
+  top: 0 !important;
+  width: 7.5in !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: -1;
 }
 
 

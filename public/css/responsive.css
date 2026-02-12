@@ -81,14 +81,23 @@
     justify-content: center;
   }
 
-  /* Step Actions: Reverse column (next on top) */
-  .step-actions {
-    flex-direction: column-reverse;
+  /* Step Actions: Bottom sticky bar on mobile */
+  .wizard-step:not(.results) .step-actions {
+    position: sticky;
+    bottom: 0;
+    margin: 0 calc(-1 * var(--space-5));
+    padding: var(--space-4) var(--space-5);
+    background-color: var(--color-white);
+    border-top: 1px solid var(--color-gray-200);
+    border-radius: 0;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+    z-index: 50;
     gap: var(--space-3);
   }
 
   .step-actions .btn {
-    width: 100%;
+    flex: 1;
+    min-height: 48px;
   }
 
   /* Progress Bar: Hide labels, show circles only */
@@ -98,9 +107,7 @@
   }
 
   .progress-bar {
-    padding: 0 var(--space-4);
-    margin-top: var(--space-6);
-    margin-bottom: var(--space-4);
+    padding: var(--space-3) var(--space-4);
   }
 
   /* Results Section: Reduce padding */
@@ -148,9 +155,13 @@
   }
 
   /* App Header */
-  .app-header .header-title,
-  .header-title {
-    font-size: 1rem;
+  .header-subtitle {
+    font-size: 0.7rem;
+  }
+
+  .site-header .logo,
+  .app-header .logo {
+    max-height: 90px;
   }
 
   /* Environmental Grid */
@@ -195,6 +206,14 @@
     padding: 0;
   }
 
+  /* Card steps: tighter padding on mobile */
+  .wizard-step:not(.results) {
+    padding: var(--space-5) var(--space-5) var(--space-4);
+    border-radius: var(--radius-lg);
+    margin-left: var(--space-2);
+    margin-right: var(--space-2);
+  }
+
   /* Step Content */
   .step-content {
     padding: var(--space-2) var(--space-4);
@@ -214,8 +233,7 @@
 
   /* Progress bar: Tighter */
   .progress-bar {
-    padding: 0 var(--space-3);
-    margin-top: var(--space-4);
+    padding: var(--space-2) var(--space-3);
   }
 
   .progress-step-circle {
@@ -305,12 +323,13 @@
     gap: var(--space-3);
   }
 
+  .site-header .logo,
   .app-header .logo {
-    max-height: 38px;
+    max-height: 72px;
   }
 
-  .app-header .header-title {
-    font-size: 0.9rem;
+  .header-subtitle {
+    font-size: 0.65rem;
   }
 }
 

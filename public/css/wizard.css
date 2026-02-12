@@ -49,9 +49,14 @@
 
 .site-header,
 .app-header {
-  background-color: var(--color-black);
-  padding: var(--space-5) var(--space-8);
-  position: relative;
+  background-color: var(--color-white);
+  padding: var(--space-5) var(--space-8) var(--space-4);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .site-header::after,
@@ -67,10 +72,10 @@
 
 .header-inner {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-4);
+  gap: var(--space-1);
   max-width: var(--max-width);
   margin: 0 auto;
 }
@@ -82,16 +87,16 @@
 
 .site-header .logo,
 .app-header .logo {
-  max-height: 50px;
+  max-height: 120px;
   width: auto;
 }
 
-.header-title,
-.app-header .header-title {
-  color: var(--color-white);
-  font-size: 1.25rem;
+.header-subtitle {
+  color: var(--color-gray-500);
+  font-size: 0.8rem;
   font-weight: var(--font-weight-semibold);
-  letter-spacing: 0.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
 }
 
 
@@ -101,8 +106,8 @@
 
 .progress-bar {
   max-width: var(--max-width);
-  margin: var(--space-8) auto var(--space-6);
-  padding: 0 var(--space-6);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-8);
   position: relative;
 }
 
@@ -110,6 +115,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: var(--space-4);
 }
 
 .progress-step {
@@ -125,9 +131,9 @@
 .progress-step:not(:last-child)::after {
   content: '';
   position: absolute;
-  top: 20px;
-  left: calc(50% + 24px);
-  width: calc(100% - 48px);
+  top: 18px;
+  left: calc(50% + 22px);
+  width: calc(100% - 44px);
   height: 2px;
   background-color: var(--color-gray-200);
   z-index: 0;
@@ -154,19 +160,17 @@
 
 .progress-step-circle,
 .step-number {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   font-weight: var(--font-weight-semibold);
   background-color: var(--color-gray-200);
   color: var(--color-gray-500);
-  transition: background-color var(--transition-normal),
-              color var(--transition-normal),
-              box-shadow var(--transition-normal);
+  transition: all var(--transition-normal);
   position: relative;
   z-index: 2;
 }
@@ -174,13 +178,14 @@
 .progress-step-label,
 .step-label {
   margin-top: var(--space-2);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--color-gray-400);
   text-align: center;
   font-weight: var(--font-weight-normal);
   transition: color var(--transition-normal),
               font-weight var(--transition-normal);
   white-space: nowrap;
+  letter-spacing: 0.02em;
 }
 
 /* Active step */
@@ -236,7 +241,18 @@
 
 .wizard-step.active:not([hidden]) {
   display: block;
-  animation: fadeIn 0.4s ease forwards;
+  animation: fadeIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Card-wrapped wizard steps (not results) */
+.wizard-step:not(.results) {
+  background-color: var(--color-white);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8) var(--space-8) var(--space-6);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 6px 24px rgba(0, 0, 0, 0.06);
+  margin-bottom: var(--space-6);
 }
 
 .step-content {
@@ -260,12 +276,13 @@
 
 .step-heading,
 .step-header h2 {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   color: var(--color-gray-900);
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-1);
   padding-bottom: var(--space-2);
   position: relative;
   display: inline-block;
+  letter-spacing: -0.02em;
 }
 
 .step-heading::after,
@@ -274,16 +291,16 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 40px;
+  width: 32px;
   height: 3px;
-  background-color: var(--color-orange);
+  background: linear-gradient(90deg, var(--color-orange), var(--color-orange-light));
   border-radius: 2px;
 }
 
 .step-description,
 .step-header p {
   color: var(--color-gray-500);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 
@@ -296,9 +313,10 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-top: var(--space-10);
-  padding-top: var(--space-6);
+  margin-top: var(--space-8);
+  padding-top: var(--space-5);
   border-top: 1px solid var(--color-gray-200);
+  gap: var(--space-3);
 }
 
 .step-actions .btn:only-child {
@@ -315,8 +333,8 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  padding: 12px 32px;
-  border-radius: 10px;
+  padding: 14px 32px;
+  border-radius: var(--radius-lg);
   font-size: 0.95rem;
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
@@ -328,6 +346,8 @@
   border: 2px solid transparent;
   text-align: center;
   line-height: 1.4;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .btn:active {
