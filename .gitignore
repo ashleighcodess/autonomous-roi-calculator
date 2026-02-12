@@ -1,0 +1,10 @@
+node_modules/
+.dev.vars
+.DS_Store
+.wrangler/
+
+# Client reference files (not part of the web app)
+assets/
+Fiverr Premium Kit/
+*.pdf
+*.docx

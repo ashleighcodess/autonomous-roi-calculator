@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROI Calculator | Autonomous Mowing Solutions</title>
+  <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/wizard.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/results.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3"></script>
+  <script src="js/calculator.js" defer></script>
+  <script src="js/equipment.js" defer></script>
+  <script src="js/charts.js" defer></script>
+  <script src="js/pdf-generator.js" defer></script>
+  <script src="js/lead-capture.js" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="logo-link" aria-label="Autonomous Mowing Solutions home">
+        <img src="images/logo.svg" alt="Autonomous Mowing Solutions" class="logo" width="180" height="48">
+      </a>
+      <h1 class="header-title">ROI Calculator</h1>
+    </div>
+  </header>
+
+  <!-- ===== PROGRESS BAR ===== -->
+  <nav class="progress-bar" aria-label="Wizard progress">
+    <ol class="progress-steps">
+      <li class="progress-step active" data-step="1">
+        <button type="button" class="progress-btn" aria-label="Go to Step 1: Property Info" aria-current="step">
+          <span class="step-number">1</span>
+          <span class="step-label">Property Info</span>
+        </button>
+      </li>
+      <li class="progress-step" data-step="2">
+        <button type="button" class="progress-btn" aria-label="Go to Step 2: Current Costs" disabled>
+          <span class="step-number">2</span>
+          <span class="step-label">Current Costs</span>
+        </button>
+      </li>
+      <li class="progress-step" data-step="3">
+        <button type="button" class="progress-btn" aria-label="Go to Step 3: Goals" disabled>
+          <span class="step-number">3</span>
+          <span class="step-label">Goals</span>
+        </button>
+      </li>
+      <li class="progress-step" data-step="4">
+        <button type="button" class="progress-btn" aria-label="Go to Step 4: Results" disabled>
+          <span class="step-number">4</span>
+          <span class="step-label">Results</span>
+        </button>
+      </li>
+    </ol>
+  </nav>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main-content">
+
+    <!-- ==================== STEP 1: PROPERTY INFORMATION ==================== -->
+    <section id="step-1" class="wizard-step active" data-step="1" aria-labelledby="step-1-heading">
+      <h2 id="step-1-heading" class="step-heading">Property Information</h2>
+      <p class="step-description">Tell us about your property so we can tailor the analysis.</p>
+
+      <fieldset class="form-fieldset">
+        <legend class="sr-only">Property details</legend>
+
+        <!-- Property Type -->
+        <div class="form-group">
+          <label for="property-type" class="form-label">Property Type</label>
+          <select id="property-type" name="propertyType" class="form-select" required aria-required="true">
+            <option value="" disabled selected>Select property type...</option>
+            <option value="commercial">Commercial Property</option>
+            <option value="golf">Golf Course</option>
+            <option value="athletic">Athletic Fields</option>
+          </select>
+        </div>
+
+        <!-- Total Mowable Acreage -->
+        <div class="form-group">
+          <label for="total-acreage" class="form-label">Total Mowable Acreage</label>
+          <div class="input-wrapper">
+            <input
+              type="number"
+              id="total-acreage"
+              name="totalAcreage"
+              class="form-input"
+              min="0.5"
+              step="0.5"
+              required
+              aria-required="true"
+              placeholder="e.g. 25"
+            >
+            <span class="input-unit">acres</span>
+          </div>
+          <span class="form-helper">Include all grass areas that need regular mowing</span>
+        </div>
+
+        <!-- Mowing Season Length -->
+        <div class="form-group">
+          <label for="season-length" class="form-label">Mowing Season Length</label>
+          <div class="input-wrapper">
+            <input
+              type="number"
+              id="season-length"
+              name="seasonLength"
+              class="form-input"
+              min="1"
+              max="52"
+              value="30"
+              aria-describedby="season-helper"
+            >
+            <span class="input-unit">weeks</span>
+          </div>
+          <span id="season-helper" class="form-helper">Typical growing season in weeks</span>
+        </div>
+      </fieldset>
+
+      <div class="step-actions">
+        <button type="button" class="btn btn-primary btn-next" data-next="2" aria-label="Continue to Current Costs">
+          Next
+          <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== STEP 2: CURRENT COSTS ==================== -->
+    <section id="step-2" class="wizard-step" data-step="2" aria-labelledby="step-2-heading">
+      <h2 id="step-2-heading" class="step-heading">Current Costs</h2>
+      <p class="step-description">How is your property currently maintained?</p>
+
+      <!-- Maintenance Type Card Selector -->
+      <div class="form-group">
+        <label class="form-label">Maintenance Type</label>
+        <div class="card-selector" role="radiogroup" aria-label="Maintenance type">
+          <button
+            type="button"
+            class="card-option selected"
+            data-value="in-house"
+            role="radio"
+            aria-checked="true"
+            aria-label="In-House maintenance"
+          >
+            <svg class="card-icon" width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 4L4 14h4v12h6v-8h4v8h6V14h4L16 4z" fill="currentColor"/></svg>
+            <span class="card-label">In-House</span>
+          </button>
+          <button
+            type="button"
+            class="card-option"
+            data-value="outsourced"
+            role="radio"
+            aria-checked="false"
+            aria-label="Outsourced maintenance"
+          >
+            <svg class="card-icon" width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M26 10H6a2 2 0 00-2 2v12a2 2 0 002 2h20a2 2 0 002-2V12a2 2 0 00-2-2zM16 6l-6 4h12l-6-4z" fill="currentColor"/></svg>
+            <span class="card-label">Outsourced</span>
+          </button>
+        </div>
+        <input type="hidden" id="maintenance-type" name="maintenanceType" value="in-house">
+      </div>
+
+      <!-- In-House Fields -->
+      <fieldset id="inhouse-fields" class="form-fieldset" data-type="in-house">
+        <legend class="sr-only">In-house maintenance costs</legend>
+
+        <!-- Employees on Mowing -->
+        <div class="form-group">
+          <label for="employee-count" class="form-label">Employees on Mowing</label>
+          <div class="input-wrapper">
+            <input
+              type="number"
+              id="employee-count"
+              name="employeeCount"
+              class="form-input"
+              min="1"
+              required
+              aria-required="true"
+              placeholder="e.g. 4"
+            >
+            <span class="input-unit">people</span>
+          </div>
+        </div>
+
+        <!-- Average Hourly Rate -->
+        <div class="form-group">
+          <label for="hourly-rate" class="form-label">Average Hourly Rate</label>
+          <div class="input-wrapper input-currency">
+            <span class="input-prefix">$</span>
+            <input
+              type="number"
+              id="hourly-rate"
+              name="hourlyRate"
+              class="form-input"
+              min="10"
+              step="0.50"
+              required
+              aria-required="true"
+              placeholder="e.g. 22.00"
+            >
+          </div>
+          <span class="form-helper">Including benefits</span>
+        </div>
+
+        <!-- Time Spent Mowing (range slider) -->
+        <div class="form-group">
+          <label for="mowing-time-pct" class="form-label">
+            What % of work time is spent on mowing?
+          </label>
+          <div class="range-wrapper">
+            <input
+              type="range"
+              id="mowing-time-pct"
+              name="mowingTimePct"
+              class="form-range"
+              min="10"
+              max="90"
+              step="5"
+              value="60"
+              aria-valuenow="60"
+              aria-valuemin="10"
+              aria-valuemax="90"
+            >
+            <output for="mowing-time-pct" class="range-value" id="mowing-time-pct-value">60%</output>
+          </div>
+        </div>
+
+        <!-- Equipment Leased Toggle -->
+        <div class="form-group form-group-toggle">
+          <label class="toggle-wrapper">
+            <input
+              type="checkbox"
+              id="equipment-leased"
+              name="equipmentLeased"
+              class="toggle-input"
+              role="switch"
+              aria-checked="false"
+            >
+            <span class="toggle-slider" aria-hidden="true"></span>
+            <span class="toggle-label">Equipment is currently leased</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Outsourced Fields (hidden by default) -->
+      <fieldset id="outsourced-fields" class="form-fieldset hidden" data-type="outsourced">
+        <legend class="sr-only">Outsourced maintenance costs</legend>
+
+        <!-- Monthly Contract Cost -->
+        <div class="form-group">
+          <label for="contract-cost" class="form-label">Monthly Contract Cost</label>
+          <div class="input-wrapper input-currency">
+            <span class="input-prefix">$</span>
+            <input
+              type="number"
+              id="contract-cost"
+              name="contractCost"
+              class="form-input"
+              min="0"
+              step="100"
+              required
+              aria-required="true"
+              placeholder="e.g. 8000"
+            >
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Calculation Assumptions (Collapsible) -->
+      <div class="assumptions-section">
+        <button
+          type="button"
+          class="assumptions-toggle"
+          aria-expanded="false"
+          aria-controls="assumptions-content"
+        >
+          <h3 class="assumptions-title">Calculation Assumptions</h3>
+          <svg class="toggle-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+
+        <div id="assumptions-content" class="assumptions-content" hidden>
+
+          <!-- Basic Assumptions (always visible when expanded) -->
+          <fieldset class="form-fieldset assumptions-basic">
+            <legend class="sr-only">Basic calculation assumptions</legend>
+
+            <!-- Employee Benefits (%) -->
+            <div class="form-group">
+              <label for="benefits-pct" class="form-label">
+                Employee Benefits (%)
+                <span class="source-label">Source: BLS Employer Costs</span>
+              </label>
+              <div class="range-wrapper">
+                <input
+                  type="range"
+                  id="benefits-pct"
+                  name="benefitsPct"
+                  class="form-range"
+                  min="0"
+                  max="50"
+                  step="1"
+                  value="12"
+                  aria-valuenow="12"
+                  aria-valuemin="0"
+                  aria-valuemax="50"
+                >
+                <output for="benefits-pct" class="range-value" id="benefits-pct-value">12%</output>
+              </div>
+            </div>
+
+            <!-- Fuel Cost per Gallon -->
+            <div class="form-group">
+              <label for="fuel-cost" class="form-label">
+                Fuel Cost per Gallon
+                <span class="source-label">Source: EIA weekly average</span>
+              </label>
+              <div class="input-wrapper input-currency">
+                <span class="input-prefix">$</span>
+                <input
+                  type="number"
+                  id="fuel-cost"
+                  name="fuelCost"
+                  class="form-input"
+                  value="3.50"
+                  step="0.01"
+                  min="0"
+                >
+              </div>
+            </div>
+
+            <!-- Labor Reduction w/ Automation -->
+            <div class="form-group">
+              <label for="labor-reduction" class="form-label">
+                Labor Reduction w/ Automation
+                <span class="source-label">Source: Husqvarna Commercial Studies</span>
+              </label>
+              <div class="range-wrapper">
+                <input
+                  type="range"
+                  id="labor-reduction"
+                  name="laborReduction"
+                  class="form-range"
+                  min="50"
+                  max="95"
+                  step="5"
+                  value="85"
+                  aria-valuenow="85"
+                  aria-valuemin="50"
+                  aria-valuemax="95"
+                >
+                <output for="labor-reduction" class="range-value" id="labor-reduction-value">85%</output>
+              </div>
+            </div>
+
+            <!-- Buffer Time (%) -->
+            <div class="form-group">
+              <label for="buffer-time" class="form-label">
+                Buffer Time (%)
+                <span class="source-label">Source: Time-motion study</span>
+              </label>
+              <div class="range-wrapper">
+                <input
+                  type="range"
+                  id="buffer-time"
+                  name="bufferTime"
+                  class="form-range"
+                  min="5"
+                  max="40"
+                  step="5"
+                  value="15"
+                  aria-valuenow="15"
+                  aria-valuemin="5"
+                  aria-valuemax="40"
+                >
+                <output for="buffer-time" class="range-value" id="buffer-time-value">15%</output>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Advanced Assumptions Toggle -->
+          <button
+            type="button"
+            class="btn btn-text advanced-toggle"
+            aria-expanded="false"
+            aria-controls="advanced-assumptions"
+          >
+            Show all assumptions
+          </button>
+
+          <!-- Advanced Assumptions (hidden by default) -->
+          <fieldset id="advanced-assumptions" class="form-fieldset assumptions-advanced" hidden>
+            <legend class="sr-only">Advanced calculation assumptions</legend>
+
+            <!-- Annual Labor Cost Increase -->
+            <div class="form-group">
+              <label for="labor-cost-increase" class="form-label">
+                Annual Labor Cost Increase
+                <span class="source-label">Source: Industry average</span>
+              </label>
+              <div class="range-wrapper">
+                <input
+                  type="range"
+                  id="labor-cost-increase"
+                  name="laborCostIncrease"
+                  class="form-range"
+                  min="0"
+                  max="10"
+                  step="0.5"
+                  value="2.5"
+                  aria-valuenow="2.5"
+                  aria-valuemin="0"
+                  aria-valuemax="10"
+                >
+                <output for="labor-cost-increase" class="range-value" id="labor-cost-increase-value">2.5%</output>
+              </div>
+            </div>
+
+            <!-- Fuel Consumption per Acre -->
+            <div class="form-group">
+              <label for="fuel-consumption" class="form-label">
+                Fuel Consumption per Acre
+                <span class="source-label">Source: Equipment manufacturer data</span>
+              </label>
+              <div class="input-wrapper">
+                <input
+                  type="number"
+                  id="fuel-consumption"
+                  name="fuelConsumption"
+                  class="form-input"
+                  value="0.75"
+                  step="0.05"
+                  min="0"
+                >
+                <span class="input-unit">gal/acre</span>
+              </div>
+            </div>
+
+            <!-- Annual Fuel Cost Increase -->
+            <div class="form-group">
+              <label for="fuel-cost-increase" class="form-label">
+                Annual Fuel Cost Increase
+                <span class="source-label">Source: EIA projections</span>
+              </label>
+              <div class="range-wrapper">
+                <input
+                  type="range"
+                  id="fuel-cost-increase"
+                  name="fuelCostIncrease"
+                  class="form-range"
+                  min="0"
+                  max="15"
+                  step="0.5"
+                  value="3.5"
+                  aria-valuenow="3.5"
+                  aria-valuemin="0"
+                  aria-valuemax="15"
+                >
+                <output for="fuel-cost-increase" class="range-value" id="fuel-cost-increase-value">3.5%</output>
+              </div>
+            </div>
+
+            <!-- Base Equipment Cost -->
+            <div class="form-group">
+              <label for="base-equipment-cost" class="form-label">
+                Base Equipment Cost
+                <span class="source-label">Source: Dealer pricing</span>
+              </label>
+              <div class="input-wrapper input-currency">
+                <span class="input-prefix">$</span>
+                <input
+                  type="number"
+                  id="base-equipment-cost"
+                  name="baseEquipmentCost"
+                  class="form-input"
+                  value="15000"
+                  step="500"
+                  min="0"
+                >
+              </div>
+            </div>
+
+            <!-- Equipment Cost per Acre -->
+            <div class="form-group">
+              <label for="equipment-cost-per-acre" class="form-label">
+                Equipment Cost per Acre
+                <span class="source-label">Source: Dealer pricing</span>
+              </label>
+              <div class="input-wrapper input-currency">
+                <span class="input-prefix">$</span>
+                <input
+                  type="number"
+                  id="equipment-cost-per-acre"
+                  name="equipmentCostPerAcre"
+                  class="form-input"
+                  value="2000"
+                  step="100"
+                  min="0"
+                >
+              </div>
+            </div>
+
+            <!-- Annual Maintenance (%) -->
+            <div class="form-group">
+              <label for="annual-maintenance-pct" class="form-label">
+                Annual Maintenance (%)
+                <span class="source-label">Source: Service records</span>
+              </label>
+              <div class="range-wrapper">
+                <input
+                  type="range"
+                  id="annual-maintenance-pct"
+                  name="annualMaintenancePct"
+                  class="form-range"
+                  min="5"
+                  max="25"
+                  step="1"
+                  value="10"
+                  aria-valuenow="10"
+                  aria-valuemin="5"
+                  aria-valuemax="25"
+                >
+                <output for="annual-maintenance-pct" class="range-value" id="annual-maintenance-pct-value">10%</output>
+              </div>
+            </div>
+
+            <!-- Equipment Insurance (%) -->
+            <div class="form-group">
+              <label for="equipment-insurance-pct" class="form-label">
+                Equipment Insurance (%)
+                <span class="source-label">Source: Insurance benchmarks</span>
+              </label>
+              <div class="range-wrapper">
+                <input
+                  type="range"
+                  id="equipment-insurance-pct"
+                  name="equipmentInsurancePct"
+                  class="form-range"
+                  min="1"
+                  max="15"
+                  step="1"
+                  value="5"
+                  aria-valuenow="5"
+                  aria-valuemin="1"
+                  aria-valuemax="15"
+                >
+                <output for="equipment-insurance-pct" class="range-value" id="equipment-insurance-pct-value">5%</output>
+              </div>
+            </div>
+
+            <!-- Leasing Premium (%) -->
+            <div class="form-group">
+              <label for="leasing-premium-pct" class="form-label">
+                Leasing Premium (%)
+                <span class="source-label">Source: Lease agreement data</span>
+              </label>
+              <div class="range-wrapper">
+                <input
+                  type="range"
+                  id="leasing-premium-pct"
+                  name="leasingPremiumPct"
+                  class="form-range"
+                  min="0"
+                  max="20"
+                  step="1"
+                  value="7"
+                  aria-valuenow="7"
+                  aria-valuemin="0"
+                  aria-valuemax="20"
+                >
+                <output for="leasing-premium-pct" class="range-value" id="leasing-premium-pct-value">7%</output>
+              </div>
+            </div>
+
+            <!-- Robotic Mower Maintenance -->
+            <div class="form-group">
+              <label for="robotic-maintenance" class="form-label">
+                Consumables &amp; Minor Repairs
+                <span class="source-label">Source: Blade kits &amp; parts estimates</span>
+              </label>
+              <div class="input-wrapper input-currency">
+                <span class="input-prefix">$</span>
+                <input
+                  type="number"
+                  id="robotic-maintenance"
+                  name="roboticMaintenance"
+                  class="form-input"
+                  value="3"
+                  step="0.5"
+                  min="0"
+                >
+                <span class="input-unit">$/acre/mo</span>
+              </div>
+            </div>
+
+            <!-- Electricity per Acre -->
+            <div class="form-group">
+              <label for="electricity-per-acre" class="form-label">
+                Electricity per Acre
+                <span class="source-label">Source: Manufacturer specs</span>
+              </label>
+              <div class="input-wrapper">
+                <input
+                  type="number"
+                  id="electricity-per-acre"
+                  name="electricityPerAcre"
+                  class="form-input"
+                  value="1.5"
+                  step="0.1"
+                  min="0"
+                >
+                <span class="input-unit">kWh/acre</span>
+              </div>
+            </div>
+
+            <!-- CO2 per Gallon -->
+            <div class="form-group">
+              <label for="co2-per-gallon" class="form-label">
+                CO&#8322; per Gallon
+                <span class="source-label">Source: EPA emission factors</span>
+              </label>
+              <div class="input-wrapper">
+                <input
+                  type="number"
+                  id="co2-per-gallon"
+                  name="co2PerGallon"
+                  class="form-input"
+                  value="19.59"
+                  step="0.01"
+                  min="0"
+                >
+                <span class="input-unit">lbs/gal</span>
+              </div>
+            </div>
+
+            <!-- Mowing Time -->
+            <div class="form-group">
+              <label for="mowing-time-per-acre" class="form-label">
+                Mowing Time
+                <span class="source-label">Source: Operator time studies</span>
+              </label>
+              <div class="input-wrapper">
+                <input
+                  type="number"
+                  id="mowing-time-per-acre"
+                  name="mowingTimePerAcre"
+                  class="form-input"
+                  value="45"
+                  step="1"
+                  min="1"
+                >
+                <span class="input-unit">min/acre</span>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+
+      <div class="step-actions">
+        <button type="button" class="btn btn-secondary btn-back" data-prev="1" aria-label="Go back to Property Information">
+          <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3l-5 5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </button>
+        <button type="button" class="btn btn-primary btn-next" data-next="3" aria-label="Continue to Goals">
+          Next
+          <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== STEP 3: GOALS ==================== -->
+    <section id="step-3" class="wizard-step" data-step="3" aria-labelledby="step-3-heading">
+      <h2 id="step-3-heading" class="step-heading">Goals</h2>
+      <p class="step-description">Define your automation targets to tailor the recommendation.</p>
+
+      <fieldset class="form-fieldset">
+        <legend class="sr-only">Automation goals</legend>
+
+        <!-- Target Automation Level -->
+        <div class="form-group">
+          <label for="automation-level" class="form-label">Target Automation Level</label>
+          <div class="range-wrapper">
+            <input
+              type="range"
+              id="automation-level"
+              name="automationLevel"
+              class="form-range"
+              min="25"
+              max="100"
+              step="5"
+              value="50"
+              aria-valuenow="50"
+              aria-valuemin="25"
+              aria-valuemax="100"
+            >
+            <output for="automation-level" class="range-value" id="automation-level-value">50%</output>
+          </div>
+          <div id="automation-info" class="info-box" aria-live="polite">
+            <p class="info-text">Balanced approach: automate primary mowing areas while keeping manual crews for detail work and complex zones.</p>
+          </div>
+        </div>
+
+        <!-- Desired Mowing Time -->
+        <div class="form-group">
+          <label for="desired-mowing-time" class="form-label">
+            Desired Mowing Time
+            <span class="label-subtitle">Time spent on supervision and edge work</span>
+          </label>
+          <div class="range-wrapper">
+            <input
+              type="range"
+              id="desired-mowing-time"
+              name="desiredMowingTime"
+              class="form-range"
+              min="5"
+              max="60"
+              step="5"
+              value="20"
+              aria-valuenow="20"
+              aria-valuemin="5"
+              aria-valuemax="60"
+            >
+            <output for="desired-mowing-time" class="range-value" id="desired-mowing-time-value">20%</output>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="step-actions">
+        <button type="button" class="btn btn-secondary btn-back" data-prev="2" aria-label="Go back to Current Costs">
+          <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3l-5 5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </button>
+        <button type="button" class="btn btn-primary btn-calculate" id="calculate-btn" aria-label="Calculate your ROI">
+          Calculate ROI
+          <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h12M10 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== STEP 4: RESULTS ==================== -->
+    <section id="results-section" class="wizard-step results" data-step="4" aria-labelledby="results-heading" hidden>
+      <h2 id="results-heading" class="sr-only">ROI Calculation Results</h2>
+
+      <!-- 1. Hero Metrics -->
+      <div id="results-hero" class="results-block results-hero">
+        <div class="metrics-grid">
+          <div class="metric-card metric-primary" id="metric-savings">
+            <span class="metric-label">Projected Annual Savings</span>
+            <span class="metric-value" data-metric="savings">--</span>
+          </div>
+          <div class="metric-card" id="metric-payback">
+            <span class="metric-label">Payback Period</span>
+            <span class="metric-value" data-metric="payback">--</span>
+          </div>
+          <div class="metric-card" id="metric-roi">
+            <span class="metric-label">ROI</span>
+            <span class="metric-value" data-metric="roi">--</span>
+          </div>
+          <div class="metric-card" id="metric-hours">
+            <span class="metric-label">Labor Hours Saved</span>
+            <span class="metric-value" data-metric="hours">--</span>
+          </div>
+          <div class="metric-card" id="metric-co2">
+            <span class="metric-label">CO&#8322; Reduced</span>
+            <span class="metric-value" data-metric="co2">--</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Equipment Recommendation -->
+      <div id="results-equipment" class="results-block">
+        <h3 class="results-block-title">Equipment Recommendation</h3>
+        <div class="equipment-recommendation">
+          <div class="equipment-image">
+            <img id="equipment-product-img" class="product-image" src="" alt="" style="display:none;">
+            <div id="equipment-image-placeholder" class="image-placeholder" aria-label="Equipment image">
+              <svg width="80" height="80" viewBox="0 0 80 80" fill="none" aria-hidden="true"><rect width="80" height="80" rx="8" fill="#F3F4F6"/><path d="M28 52l8-16 8 12 6-8 8 12H28z" fill="#D1D5DB"/><circle cx="52" cy="32" r="4" fill="#D1D5DB"/></svg>
+            </div>
+          </div>
+          <div class="equipment-details">
+            <h4 class="equipment-model" id="equipment-model-name">--</h4>
+            <p class="equipment-units" id="equipment-units-needed">Units needed: <strong>--</strong></p>
+            <table class="pricing-table" aria-label="Equipment pricing breakdown">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Cost</th>
+                </tr>
+              </thead>
+              <tbody id="equipment-pricing-body">
+                <tr>
+                  <td>Unit Price</td>
+                  <td data-field="unit-price">--</td>
+                </tr>
+                <tr>
+                  <td>Installation</td>
+                  <td data-field="installation">--</td>
+                </tr>
+                <tr>
+                  <td>Setup &amp; Training</td>
+                  <td data-field="setup">--</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Total Equipment Investment</th>
+                  <td data-field="total-equipment"><strong>--</strong></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Investment Summary -->
+      <div id="results-investment" class="results-block">
+        <h3 class="results-block-title">Investment Summary</h3>
+        <table class="summary-table" aria-label="Investment summary">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Cost</th>
+            </tr>
+          </thead>
+          <tbody id="investment-summary-body">
+            <tr>
+              <td>Equipment</td>
+              <td data-field="invest-equipment">--</td>
+            </tr>
+            <tr>
+              <td>Installation</td>
+              <td data-field="invest-installation">--</td>
+            </tr>
+            <tr>
+              <td>Setup &amp; Training</td>
+              <td data-field="invest-setup">--</td>
+            </tr>
+            <tr>
+              <td>Annual Service Contract</td>
+              <td data-field="invest-service">--</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr class="total-row">
+              <th>First-Year Total</th>
+              <td data-field="invest-first-year"><strong>--</strong></td>
+            </tr>
+            <tr class="total-row">
+              <th>Ongoing Annual Cost</th>
+              <td data-field="invest-ongoing"><strong>--</strong></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- 4. Cost Analysis -->
+      <div id="results-cost-analysis" class="results-block">
+        <h3 class="results-block-title">Cost Analysis</h3>
+        <div class="cost-analysis-layout">
+          <table class="comparison-table" aria-label="Cost comparison: current vs automated">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Current</th>
+                <th>Automated</th>
+                <th>Savings</th>
+              </tr>
+            </thead>
+            <tbody id="cost-analysis-body">
+              <tr>
+                <td>Labor</td>
+                <td data-field="cost-labor-current">--</td>
+                <td data-field="cost-labor-auto">--</td>
+                <td data-field="cost-labor-savings" class="savings-cell">--</td>
+              </tr>
+              <tr>
+                <td>Fuel / Energy</td>
+                <td data-field="cost-fuel-current">--</td>
+                <td data-field="cost-fuel-auto">--</td>
+                <td data-field="cost-fuel-savings" class="savings-cell">--</td>
+              </tr>
+              <tr>
+                <td>Equipment</td>
+                <td data-field="cost-equip-current">--</td>
+                <td data-field="cost-equip-auto">--</td>
+                <td data-field="cost-equip-savings" class="savings-cell">--</td>
+              </tr>
+              <tr>
+                <td>Maintenance</td>
+                <td data-field="cost-maint-current">--</td>
+                <td data-field="cost-maint-auto">--</td>
+                <td data-field="cost-maint-savings" class="savings-cell">--</td>
+              </tr>
+              <tr>
+                <td>Electricity</td>
+                <td data-field="cost-elec-current">--</td>
+                <td data-field="cost-elec-auto">--</td>
+                <td data-field="cost-elec-savings" class="savings-cell">--</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="total-row">
+                <th>Total</th>
+                <td data-field="cost-total-current"><strong>--</strong></td>
+                <td data-field="cost-total-auto"><strong>--</strong></td>
+                <td data-field="cost-total-savings" class="savings-cell"><strong>--</strong></td>
+              </tr>
+            </tfoot>
+          </table>
+          <div class="chart-container chart-container-donut">
+            <canvas id="chart-donut" aria-label="Cost breakdown donut chart" role="img"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Before vs After -->
+      <div id="results-comparison" class="results-block">
+        <h3 class="results-block-title">Before vs After</h3>
+        <div class="chart-container chart-container-bar">
+          <canvas id="chart-bar" aria-label="Before vs after stacked bar chart" role="img"></canvas>
+        </div>
+      </div>
+
+      <!-- 6. 5-Year Projection -->
+      <div id="results-projection" class="results-block">
+        <h3 class="results-block-title">5-Year Projection</h3>
+        <div class="chart-container chart-container-line">
+          <canvas id="chart-line" aria-label="5-year cost projection line chart" role="img"></canvas>
+        </div>
+        <table class="projection-table" aria-label="Year-by-year cost projection">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Current Costs</th>
+              <th>Automated Costs</th>
+              <th>Annual Savings</th>
+              <th>Cumulative Savings</th>
+            </tr>
+          </thead>
+          <tbody id="projection-table-body">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 7. Labor Analysis -->
+      <div id="results-labor" class="results-block">
+        <h3 class="results-block-title">Labor Analysis</h3>
+        <div class="labor-breakdown">
+          <div class="labor-stat">
+            <span class="labor-stat-label">Current Weekly Mowing Hours</span>
+            <span class="labor-stat-value" id="labor-hours-current">--</span>
+          </div>
+          <div class="labor-stat">
+            <span class="labor-stat-label">Automated Weekly Hours</span>
+            <span class="labor-stat-value" id="labor-hours-auto">--</span>
+          </div>
+          <div class="labor-stat">
+            <span class="labor-stat-label">Hours Saved per Week</span>
+            <span class="labor-stat-value" id="labor-hours-saved">--</span>
+          </div>
+          <div class="labor-stat">
+            <span class="labor-stat-label">Annual Hours Saved</span>
+            <span class="labor-stat-value" id="labor-hours-annual">--</span>
+          </div>
+        </div>
+        <div class="staffing-recommendation" id="staffing-recommendation">
+          <h4>Staffing Recommendation</h4>
+          <p id="staffing-text">--</p>
+        </div>
+      </div>
+
+      <!-- 8. Environmental Impact -->
+      <div id="results-environmental" class="results-block">
+        <h3 class="results-block-title">Environmental Impact</h3>
+        <div class="environmental-grid">
+          <div class="env-card">
+            <svg class="env-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true"><circle cx="20" cy="20" r="18" stroke="#22C55E" stroke-width="2"/><path d="M14 20l4 4 8-8" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="env-value" id="env-co2-reduced">--</span>
+            <span class="env-label">CO&#8322; Reduced (lbs/yr)</span>
+          </div>
+          <div class="env-card">
+            <svg class="env-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 6c-2 4-8 10-8 16a8 8 0 0016 0c0-6-6-12-8-16z" stroke="#3B82F6" stroke-width="2" fill="none"/></svg>
+            <span class="env-value" id="env-fuel-saved">--</span>
+            <span class="env-label">Fuel Gallons Saved</span>
+          </div>
+          <div class="env-card">
+            <svg class="env-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M8 30c0-8 6-14 12-20 6 6 12 12 12 20" stroke="#A855F7" stroke-width="2" fill="none"/><path d="M20 10v20M14 24h12" stroke="#A855F7" stroke-width="2" stroke-linecap="round"/></svg>
+            <span class="env-value" id="env-noise-reduction">30 dB quieter</span>
+            <span class="env-label">Noise Reduction</span>
+          </div>
+          <div class="env-card">
+            <svg class="env-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 6v4M20 30v4M6 20h4M30 20h4" stroke="#16A34A" stroke-width="2" stroke-linecap="round"/><circle cx="20" cy="20" r="8" stroke="#16A34A" stroke-width="2" fill="none"/></svg>
+            <span class="env-value" id="env-tree-equivalents">--</span>
+            <span class="env-label">Tree Equivalents</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. Calculation Methodology -->
+      <div id="results-methodology" class="results-block">
+        <h3 class="results-block-title">Calculation Methodology</h3>
+        <div class="methodology-sections">
+          <details class="methodology-item">
+            <summary>Labor Cost Calculation</summary>
+            <div class="methodology-content" id="methodology-labor">
+              <p>Formula and calculated values will be populated by JavaScript.</p>
+            </div>
+          </details>
+          <details class="methodology-item">
+            <summary>Fuel &amp; Energy Cost Calculation</summary>
+            <div class="methodology-content" id="methodology-fuel">
+              <p>Formula and calculated values will be populated by JavaScript.</p>
+            </div>
+          </details>
+          <details class="methodology-item">
+            <summary>Equipment Cost Calculation</summary>
+            <div class="methodology-content" id="methodology-equipment">
+              <p>Formula and calculated values will be populated by JavaScript.</p>
+            </div>
+          </details>
+          <details class="methodology-item">
+            <summary>ROI &amp; Payback Calculation</summary>
+            <div class="methodology-content" id="methodology-roi">
+              <p>Formula and calculated values will be populated by JavaScript.</p>
+            </div>
+          </details>
+          <details class="methodology-item">
+            <summary>Environmental Impact Calculation</summary>
+            <div class="methodology-content" id="methodology-environmental">
+              <p>Formula and calculated values will be populated by JavaScript.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- 10. Property Details -->
+      <div id="results-property" class="results-block">
+        <h3 class="results-block-title">Property Details</h3>
+        <table class="property-details-table" aria-label="Summary of property inputs">
+          <tbody id="property-details-body">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 11. Lead Capture Form -->
+      <div id="results-lead-capture" class="results-block results-lead-capture">
+        <h3 class="results-block-title">Get Your Custom Proposal</h3>
+        <p class="lead-capture-description">Our team will review your property details and provide a tailored automation plan.</p>
+        <form id="lead-capture-form" class="lead-form" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="lead-name" class="form-label">Full Name</label>
+              <input
+                type="text"
+                id="lead-name"
+                name="fullName"
+                class="form-input"
+                required
+                aria-required="true"
+                placeholder="John Smith"
+                autocomplete="name"
+              >
+            </div>
+            <div class="form-group">
+              <label for="lead-email" class="form-label">Email</label>
+              <input
+                type="email"
+                id="lead-email"
+                name="email"
+                class="form-input"
+                required
+                aria-required="true"
+                placeholder="john@company.com"
+                autocomplete="email"
+              >
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="lead-phone" class="form-label">Phone</label>
+              <input
+                type="tel"
+                id="lead-phone"
+                name="phone"
+                class="form-input"
+                placeholder="(555) 123-4567"
+                autocomplete="tel"
+              >
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="lead-message" class="form-label">Message</label>
+            <textarea
+              id="lead-message"
+              name="message"
+              class="form-textarea"
+              rows="4"
+              placeholder="Tell us about your specific needs or questions..."
+            ></textarea>
+          </div>
+
+          <!-- Hidden fields for calculator data -->
+          <input type="hidden" id="lead-property-type" name="propertyType">
+          <input type="hidden" id="lead-acreage" name="acreage">
+          <input type="hidden" id="lead-annual-savings" name="annualSavings">
+          <input type="hidden" id="lead-payback-period" name="paybackPeriod">
+          <input type="hidden" id="lead-roi" name="roi">
+          <input type="hidden" id="lead-equipment-model" name="equipmentModel">
+
+          <button type="submit" class="btn btn-primary btn-submit" id="lead-submit-btn">
+            Request Custom Proposal
+            <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M14 2L7 14l-2-5-5-2L14 2z" fill="currentColor"/></svg>
+          </button>
+
+          <div id="lead-form-status" class="form-status" aria-live="polite" hidden>
+            <p class="status-message" id="lead-status-message"></p>
+          </div>
+        </form>
+      </div>
+
+      <!-- 12. CTAs -->
+      <div id="results-cta" class="results-block results-cta">
+        <div class="cta-actions">
+          <button type="button" class="btn btn-primary btn-download" id="download-pdf-btn" aria-label="Download PDF report of your ROI analysis">
+            <svg class="btn-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 2v10M5 8l4 4 4-4M3 14h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Download PDF Report
+          </button>
+          <a href="https://www.autonomousmowingsolutions.com" class="btn btn-secondary btn-visit" target="_blank" rel="noopener noreferrer" aria-label="Visit Autonomous Mowing Solutions website">
+            Visit Our Website
+            <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 3h8v8M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <button type="button" class="btn btn-outline btn-start-over" id="start-over-btn" aria-label="Start the calculator over from the beginning">
+            <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8a6 6 0 1111.5-2.5M14 2v4h-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Start Over
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ===== HIDDEN PDF EXPORT CONTAINER ===== -->
+  <div id="pdf-export" hidden aria-hidden="true">
+    <!-- Used by pdf-generator.js to render exportable content -->
+  </div>
+
+</body>
+</html>

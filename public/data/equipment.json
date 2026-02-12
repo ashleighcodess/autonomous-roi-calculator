@@ -1,0 +1,98 @@
+{
+  "models": [
+    {
+      "id": "520-epos",
+      "name": "Husqvarna Automower 520 EPOS",
+      "shortName": "520 EPOS",
+      "price": 3299.99,
+      "coverage": 1.25,
+      "terrain": "flat",
+      "bestFor": ["small commercial"],
+      "description": "Ideal for smaller commercial properties up to 1.25 acres"
+    },
+    {
+      "id": "520h-epos",
+      "name": "Husqvarna Automower 520H EPOS",
+      "shortName": "520H EPOS",
+      "price": 3299.99,
+      "coverage": 1.25,
+      "terrain": "hilly",
+      "bestFor": ["hilly commercial", "golf"],
+      "description": "Designed for hilly terrain on smaller commercial properties and golf courses"
+    },
+    {
+      "id": "535-awd-epos",
+      "name": "Husqvarna Automower 535 AWD EPOS",
+      "shortName": "535 AWD EPOS",
+      "price": 4999.99,
+      "coverage": 1.25,
+      "terrain": "rough",
+      "bestFor": ["rough terrain"],
+      "description": "All-wheel drive for the most challenging terrain conditions"
+    },
+    {
+      "id": "550-epos",
+      "name": "Husqvarna Automower 550 EPOS",
+      "shortName": "550 EPOS",
+      "price": 5829.99,
+      "coverage": 2.5,
+      "terrain": "flat",
+      "bestFor": ["large commercial", "athletic"],
+      "description": "High-capacity mower for large commercial properties and athletic fields"
+    },
+    {
+      "id": "550h-epos",
+      "name": "Husqvarna Automower 550H EPOS",
+      "shortName": "550H EPOS",
+      "price": 5299.99,
+      "coverage": 2.5,
+      "terrain": "hilly",
+      "bestFor": ["large hilly", "golf"],
+      "description": "High-capacity mower designed for large hilly properties and golf courses"
+    }
+  ],
+  "accessories": {
+    "referenceStation": {
+      "name": "EPOS RS5 Reference Station",
+      "price": 899.99,
+      "perSite": true,
+      "notes": "1 per site, shared by all mowers"
+    },
+    "housing": {
+      "name": "Automower House (400/500 series)",
+      "price": 171.99,
+      "perUnit": true,
+      "notes": "1 per mower unit"
+    }
+  },
+  "services": {
+    "annualMaintenance": {
+      "name": "Annual Onsite Maintenance",
+      "price": 249.00,
+      "perUnit": true,
+      "frequency": "annual"
+    },
+    "remoteSupport": {
+      "name": "Remote Support",
+      "price": 94.99,
+      "perUnit": false,
+      "frequency": "annual"
+    },
+    "winterStorage": {
+      "name": "Winter Storage & Service",
+      "price": 149.99,
+      "perUnit": true,
+      "frequency": "annual"
+    }
+  },
+  "installation": {
+    "perUnit": {
+      "name": "Site Installation & Mapping",
+      "price": 1500
+    },
+    "flat": {
+      "name": "Training & App Configuration",
+      "price": 500
+    }
+  }
+}

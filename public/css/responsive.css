@@ -1,0 +1,525 @@
+/* ============================================
+   AUTONOMOUS MOWING SOLUTIONS - ROI CALCULATOR
+   Responsive Breakpoints & Print Styles
+   ============================================ */
+
+
+/* ============================================
+   TABLET (max-width: 768px)
+   ============================================ */
+
+@media (max-width: 768px) {
+
+  /* Metrics Grid: 2 columns */
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+
+  .metric-card.metric-primary {
+    grid-column: 1 / -1;
+  }
+
+  .metric-value {
+    font-size: 1.75rem;
+  }
+
+  .metric-card {
+    padding: 20px 16px;
+  }
+
+  /* Card Selector: Stack vertically */
+  .card-selector {
+    flex-direction: column;
+  }
+
+  .card-option {
+    padding: 16px 20px;
+  }
+
+  /* Comparison Table: Smaller text, horizontal scroll */
+  .comparison-table {
+    font-size: 0.8rem;
+  }
+
+  .comparison-table thead th,
+  .comparison-table tbody td {
+    padding: 10px 12px;
+  }
+
+  .table-wrapper {
+    margin: 0 calc(-1 * var(--space-4));
+    padding: 0 var(--space-4);
+  }
+
+  /* Equipment Card: Stack */
+  .equipment-card {
+    flex-direction: column;
+  }
+
+  .equipment-image {
+    width: 100%;
+    min-height: 180px;
+  }
+
+  /* Environmental Grid: 2 columns */
+  .environmental-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+
+  /* CTA Section: Stack buttons */
+  .cta-section {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .cta-section .btn-download,
+  .cta-section .btn-website,
+  .cta-section .btn-start-over {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Step Actions: Reverse column (next on top) */
+  .step-actions {
+    flex-direction: column-reverse;
+    gap: var(--space-3);
+  }
+
+  .step-actions .btn {
+    width: 100%;
+  }
+
+  /* Progress Bar: Hide labels, show circles only */
+  .progress-step-label,
+  .step-label {
+    display: none;
+  }
+
+  .progress-bar {
+    padding: 0 var(--space-4);
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-4);
+  }
+
+  /* Results Section: Reduce padding */
+  .results-block,
+  .results-section {
+    padding: 20px 16px;
+    margin-bottom: var(--space-4);
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    margin-bottom: var(--space-4);
+  }
+
+  /* Charts Row: Stack */
+  .charts-row {
+    grid-template-columns: 1fr;
+  }
+
+  /* Results Header */
+  .results-header h2 {
+    font-size: 1.5rem;
+  }
+
+  /* Step Content */
+  .step-content {
+    padding: var(--space-4);
+  }
+
+  /* Form Row: Stack on tablet */
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  /* Assumption Items */
+  .assumption-item {
+    grid-template-columns: 1fr auto;
+    gap: var(--space-2);
+  }
+
+  /* Lead Form */
+  .lead-form {
+    padding: 0 var(--space-2);
+  }
+
+  /* App Header */
+  .app-header .header-title,
+  .header-title {
+    font-size: 1rem;
+  }
+
+  /* Environmental Grid */
+  .environmental-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+}
+
+
+/* ============================================
+   MOBILE (max-width: 480px)
+   ============================================ */
+
+@media (max-width: 480px) {
+
+  /* Metrics Grid: 1 column */
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    padding: 0 var(--space-2);
+  }
+
+  .metric-card.metric-primary {
+    grid-column: 1;
+  }
+
+  .metric-card {
+    padding: 16px;
+  }
+
+  .metric-value {
+    font-size: 1.5rem;
+  }
+
+  .metric-card.metric-primary .metric-value {
+    font-size: 2rem;
+  }
+
+  /* Body padding */
+  body {
+    padding: 0;
+  }
+
+  /* Step Content */
+  .step-content {
+    padding: var(--space-2) var(--space-4);
+  }
+
+  /* Environmental Grid: 1 column */
+  .environmental-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Sections: Tighter padding */
+  .results-block,
+  .results-section {
+    padding: 16px;
+    border-radius: var(--radius-md);
+  }
+
+  /* Progress bar: Tighter */
+  .progress-bar {
+    padding: 0 var(--space-3);
+    margin-top: var(--space-4);
+  }
+
+  .progress-step-circle {
+    width: 30px;
+    height: 30px;
+    font-size: 0.75rem;
+  }
+
+  .progress-step:not(:last-child)::after {
+    top: 15px;
+    left: calc(50% + 18px);
+    width: calc(100% - 36px);
+  }
+
+  /* Results Header */
+  .results-header {
+    padding: var(--space-4) var(--space-3);
+  }
+
+  .results-header h2 {
+    font-size: 1.35rem;
+  }
+
+  /* Step Header */
+  .step-header h2 {
+    font-size: 1.25rem;
+  }
+
+  /* Smaller table text */
+  .comparison-table,
+  .investment-table {
+    font-size: 0.75rem;
+  }
+
+  .comparison-table thead th,
+  .comparison-table tbody td,
+  .investment-table thead th,
+  .investment-table tbody td {
+    padding: 8px 10px;
+  }
+
+  /* Environmental Card */
+  .environmental-card {
+    padding: var(--space-4);
+  }
+
+  .environmental-value {
+    font-size: 1.5rem;
+  }
+
+  /* Card Option */
+  .card-option {
+    padding: 14px 16px;
+  }
+
+  .card-option h3 {
+    font-size: 1rem;
+  }
+
+  /* Methodology */
+  .methodology-body pre {
+    font-size: 0.75rem;
+    padding: var(--space-3);
+  }
+
+  /* Buttons */
+  .btn {
+    padding: 10px 24px;
+    font-size: 0.9rem;
+  }
+
+  .btn-calculate {
+    padding: 14px 32px;
+    font-size: 1rem;
+  }
+
+  /* CTA Buttons */
+  .btn-download,
+  .btn-website {
+    padding: 10px 24px;
+    font-size: 0.875rem;
+  }
+
+  /* App Header */
+  .app-header {
+    padding: var(--space-3) var(--space-4);
+    gap: var(--space-3);
+  }
+
+  .app-header .logo {
+    max-height: 38px;
+  }
+
+  .app-header .header-title {
+    font-size: 0.9rem;
+  }
+}
+
+
+/* ============================================
+   DESKTOP (min-width: 1024px)
+   ============================================ */
+
+@media (min-width: 1024px) {
+
+  /* Metrics Grid: 4 columns (primary card spans full row above) */
+  .metrics-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-5);
+    max-width: 1100px;
+  }
+
+  .metric-card.metric-primary {
+    grid-column: 1 / -1;
+  }
+
+  /* Wider section padding */
+  .results-block,
+  .results-section {
+    padding: 40px;
+    max-width: 1000px;
+  }
+
+  /* Charts side by side */
+  .charts-row {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+  }
+
+  /* Step Content */
+  .step-content {
+    padding: var(--space-6) var(--space-8);
+  }
+
+  /* Environmental Grid */
+  .environmental-grid {
+    gap: var(--space-5);
+  }
+
+  /* Progress Bar */
+  .progress-bar {
+    max-width: 700px;
+  }
+}
+
+
+/* ============================================
+   LARGE DESKTOP (min-width: 1280px)
+   ============================================ */
+
+@media (min-width: 1280px) {
+
+  .results-header h2 {
+    font-size: 2.25rem;
+  }
+
+  .metric-value {
+    font-size: 2rem;
+  }
+
+  .metric-card.metric-primary .metric-value {
+    font-size: 3.5rem;
+  }
+}
+
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+
+  /* Hide interactive elements */
+  .site-header,
+  .app-header,
+  .progress-bar,
+  .step-actions,
+  .cta-section,
+  .cta-actions,
+  .results-cta,
+  .lead-form,
+  .results-lead-capture,
+  .assumptions-toggle,
+  .advanced-toggle,
+  .btn,
+  button,
+  .toggle-switch,
+  .toggle-wrapper,
+  nav,
+  .form-helper,
+  .btn-start-over,
+  .btn-download,
+  .btn-website {
+    display: none !important;
+  }
+
+  /* White background everywhere */
+  body {
+    background-color: #FFFFFF;
+    color: #000000;
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+
+  .results-block,
+  .results-section,
+  .metric-card,
+  .env-card,
+  .environmental-card {
+    background-color: #FFFFFF;
+    background: #FFFFFF !important;
+    box-shadow: none;
+    border: 1px solid #D1D5DB;
+    border-left: 1px solid #D1D5DB;
+  }
+
+  .metric-card.metric-primary {
+    background: #FFFFFF !important;
+    color: #000000;
+  }
+
+  .metric-card.metric-primary .metric-label {
+    color: #6B7280;
+  }
+
+  .metric-card.metric-primary .metric-value {
+    color: #E37627;
+  }
+
+  /* Remove animations */
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Page breaks before major sections */
+  .results-section {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-bottom: 16px;
+    padding: 16px;
+  }
+
+  .metrics-grid {
+    page-break-after: always;
+    break-after: page;
+  }
+
+  /* Ensure tables don't break across pages */
+  .comparison-table,
+  .investment-table,
+  .property-summary {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Full width on print */
+  .results-section,
+  .metrics-grid {
+    max-width: 100%;
+  }
+
+  /* Metric grid: 3 columns for print */
+  .metrics-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Show all hidden content */
+  .assumptions-content,
+  .advanced-assumptions {
+    display: block !important;
+  }
+
+  /* Environmental grid: 2 columns for print */
+  .environmental-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Charts: Ensure they print */
+  .chart-container canvas {
+    max-height: 300px;
+  }
+
+  /* Links: Show URL */
+  a[href]::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.8em;
+    color: #6B7280;
+  }
+
+  /* Table header contrast */
+  .comparison-table thead th,
+  .investment-table thead th {
+    background-color: #1F2937 !important;
+    color: #FFFFFF !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Preserve colored values */
+  .metric-value,
+  .savings-cell,
+  .environmental-value {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
