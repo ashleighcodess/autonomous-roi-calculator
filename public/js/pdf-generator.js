@@ -125,19 +125,8 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Lazy-load html2pdf.js
+  // No external dependencies needed - uses native browser print
   // ---------------------------------------------------------------------------
-
-  function loadHtml2Pdf() {
-    return new Promise(function (resolve, reject) {
-      if (window.html2pdf) return resolve(window.html2pdf);
-      var script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-      script.onload = function () { resolve(window.html2pdf); };
-      script.onerror = function () { reject(new Error('Failed to load html2pdf.js from CDN')); };
-      document.head.appendChild(script);
-    });
-  }
 
   // ---------------------------------------------------------------------------
   // Page builders
@@ -422,38 +411,21 @@
    */
   async function generate(results, equipment, projection, inputs) {
     var btn = document.getElementById('download-pdf-btn');
-    var container = document.getElementById('pdf-export');
     var originalBtnHTML = btn ? btn.innerHTML : '';
 
     try {
-      // -- 1. Show loading state --
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML =
-          '<svg style="animation:spin 1s linear infinite;margin-right:8px;" width="18" height="18" viewBox="0 0 18 18" fill="none">' +
-            '<circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="2" stroke-dasharray="30 14" stroke-linecap="round"/>' +
-          '</svg>' +
-          'Generating PDF\u2026';
-
-        // Add spin animation if not already present
-        if (!document.getElementById('pdf-spin-style')) {
-          var style = document.createElement('style');
-          style.id = 'pdf-spin-style';
-          style.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
-          document.head.appendChild(style);
-        }
+        btn.textContent = 'Opening report\u2026';
       }
 
-      // -- 2. Lazy-load html2pdf.js --
-      var html2pdf = await loadHtml2Pdf();
-
-      // -- 3. Compute investment metrics --
+      // -- 1. Compute investment metrics --
       var investmentMetrics = results.withInvestment(
         equipment.costs.totalInvestment,
         equipment.costs.annualService
       );
 
-      // -- 4. Build the full HTML document --
+      // -- 2. Build the full HTML document --
       var html =
         buildCover(inputs) +
         pageBreak() +
@@ -469,71 +441,54 @@
         pageBreak() +
         buildMethodology(inputs);
 
-      // -- 5. Render in a visible DOM element --
-      //    Save scroll, scroll to top, render, restore scroll.
-      var savedScrollX = window.scrollX;
-      var savedScrollY = window.scrollY;
-      window.scrollTo(0, 0);
+      // -- 3. Build a complete print-ready HTML document --
+      var fullDoc =
+        '<!DOCTYPE html>' +
+        '<html><head>' +
+        '<meta charset="UTF-8">' +
+        '<title>AMS ROI Report</title>' +
+        '<style>' +
+          'body { margin: 0; padding: 40px 50px; background: #fff; color: #222; font-family: Arial, sans-serif; }' +
+          'table { border-collapse: collapse; }' +
+          '.pdf-page-break { page-break-before: always; }' +
+          '@media print {' +
+            'body { padding: 0; }' +
+            '.pdf-page-break { page-break-before: always; }' +
+            '.no-print { display: none !important; }' +
+          '}' +
+        '</style>' +
+        '</head><body>' +
+        '<div class="no-print" style="text-align:center;padding:16px;margin-bottom:24px;' +
+          'background:linear-gradient(135deg,#E37627,#FC832B);color:#fff;border-radius:8px;font-size:15px;">' +
+          '<strong>Your ROI report is ready!</strong> &nbsp; ' +
+          'Press <kbd style="background:rgba(255,255,255,0.25);padding:2px 8px;border-radius:4px;">' +
+          (navigator.platform.indexOf('Mac') > -1 ? '\u2318 Cmd + P' : 'Ctrl + P') +
+          '</kbd> to save as PDF.' +
+        '</div>' +
+        html +
+        '</body></html>';
 
-      var renderDiv = document.createElement('div');
-      renderDiv.style.cssText =
-        'position:absolute;top:0;left:0;width:7.5in;' +
-        'background:#fff;z-index:99999;padding:0;margin:0;';
-      renderDiv.innerHTML = html;
-      document.body.appendChild(renderDiv);
-
-      // Wait for browser to paint
-      await new Promise(function (r) {
-        requestAnimationFrame(function () {
-          requestAnimationFrame(function () {
-            setTimeout(r, 500);
-          });
-        });
-      });
-
-      console.log('[PDFGenerator] renderDiv size:', renderDiv.offsetWidth, 'x', renderDiv.offsetHeight);
-
-      // -- 6. Generate and save the PDF --
-      var filename = 'AMS-ROI-Report-' + new Date().toISOString().split('T')[0] + '.pdf';
-
-      try {
-        await html2pdf()
-          .set({
-            margin:    [0.5, 0.75, 0.75, 0.75],
-            filename:  filename,
-            image:     { type: 'jpeg', quality: 0.95 },
-            html2canvas: {
-              scale: 2,
-              useCORS: true,
-              scrollX: 0,
-              scrollY: 0,
-              x: 0,
-              y: 0,
-              width: renderDiv.offsetWidth,
-              height: renderDiv.offsetHeight,
-              windowWidth: renderDiv.offsetWidth,
-              logging: true
-            },
-            jsPDF:     { unit: 'in', format: 'letter', orientation: 'portrait' },
-            pagebreak: { mode: ['css', 'legacy'], before: '.pdf-page-break' }
-          })
-          .from(renderDiv)
-          .save();
-      } finally {
-        document.body.removeChild(renderDiv);
-        window.scrollTo(savedScrollX, savedScrollY);
+      // -- 4. Open in a new window --
+      var win = window.open('', '_blank');
+      if (!win) {
+        alert('Please allow popups to download the report.');
+        return;
       }
+      win.document.open();
+      win.document.write(fullDoc);
+      win.document.close();
+
+      // -- 5. Auto-trigger print dialog after content loads --
+      win.onload = function () {
+        setTimeout(function () {
+          win.print();
+        }, 300);
+      };
 
     } catch (err) {
       console.error('[PDFGenerator] Error generating PDF:', err);
-      if (typeof window.alert === 'function') {
-        window.alert('There was a problem generating the PDF. Please try again.');
-      }
+      alert('There was a problem generating the report. Please try again.');
     } finally {
-      // -- 7. Clean up --
-      // Clean up render div if still present (e.g. on error)
-      var leftover = document.getElementById('pdf-render-temp');
-      if (leftover) document.body.removeChild(leftover);
       if (btn) {
         btn.disabled = false;
         btn.innerHTML = originalBtnHTML;
