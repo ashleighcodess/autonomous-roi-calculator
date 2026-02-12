@@ -469,39 +469,52 @@
         pageBreak() +
         buildMethodology(inputs);
 
-      // -- 5. Insert into the hidden container --
-      if (!container) {
-        container = document.createElement('div');
-        container.id = 'pdf-export';
-        document.body.appendChild(container);
-      }
+      // -- 5. Render in an iframe to isolate from page CSS --
+      var iframe = document.createElement('iframe');
+      iframe.style.cssText = 'position:fixed;left:0;top:0;width:816px;height:1056px;opacity:0;z-index:-1;border:none;';
+      document.body.appendChild(iframe);
 
-      // -- 5b. Wrap HTML in a self-contained div with explicit styles --
-      var wrappedHtml =
-        '<div style="width:7in;margin:0;padding:0;background:#fff;color:#222;font-family:Arial,sans-serif;">' +
-        html +
-        '</div>';
+      var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+      iframeDoc.open();
+      iframeDoc.write(
+        '<!DOCTYPE html><html><head><style>' +
+        'body{margin:0;padding:0;background:#fff;font-family:Arial,sans-serif;color:#222;width:7.5in;}' +
+        'table{border-collapse:collapse;}' +
+        '.pdf-page-break{page-break-before:always;}' +
+        '</style></head><body>' + html + '</body></html>'
+      );
+      iframeDoc.close();
 
-      console.log('[PDFGenerator] HTML length:', wrappedHtml.length);
+      // Wait for iframe content to render
+      await new Promise(function (r) { setTimeout(r, 1000); });
 
-      // -- 6. Generate and save the PDF using HTML string directly --
+      var iframeBody = iframeDoc.body;
+      console.log('[PDFGenerator] iframe body dimensions:', iframeBody.scrollWidth, 'x', iframeBody.scrollHeight);
+
+      // -- 6. Generate and save the PDF from the iframe body --
       var filename = 'AMS-ROI-Report-' + new Date().toISOString().split('T')[0] + '.pdf';
 
       await html2pdf()
         .set({
           margin:    [0.5, 0.75, 0.75, 0.75],
           filename:  filename,
-          image:     { type: 'jpeg', quality: 0.98 },
+          image:     { type: 'jpeg', quality: 0.95 },
           html2canvas: {
             scale: 2,
             useCORS: true,
+            scrollX: 0,
+            scrollY: 0,
+            windowWidth: 816,
             logging: true
           },
           jsPDF:     { unit: 'in', format: 'letter', orientation: 'portrait' },
           pagebreak: { mode: ['css', 'legacy'], before: '.pdf-page-break' }
         })
-        .from(wrappedHtml, 'string')
+        .from(iframeBody)
         .save();
+
+      // Remove iframe
+      document.body.removeChild(iframe);
 
     } catch (err) {
       console.error('[PDFGenerator] Error generating PDF:', err);
@@ -510,7 +523,9 @@
       }
     } finally {
       // -- 7. Clean up --
-      // Nothing to clean up - we used string mode
+      // Clean up iframe if still present (e.g. on error)
+      var leftover = document.querySelector('iframe[style*="z-index:-1"]');
+      if (leftover) document.body.removeChild(leftover);
       if (btn) {
         btn.disabled = false;
         btn.innerHTML = originalBtnHTML;
